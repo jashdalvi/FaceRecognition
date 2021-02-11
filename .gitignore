@@ -132,6 +132,10 @@ dmypy.json
 # input data and models
 input/
 models/
+Dataset/
+Dataset_aug/
+Dataset_aug_advanced/
+output/
 
 
 # data files
