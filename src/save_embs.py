@@ -39,6 +39,7 @@ def predict_boxes(resized_frame,faceNet):
 
 imagepaths = paths.list_images(os.path.join("..",'Dataset'))
 imagepaths_aug = paths.list_images(os.path.join("..",'Dataset_aug'))
+imagepaths_aug_advanced = paths.list_images(os.path.join("..",'Dataset_aug_advanced'))
 
 prototxtPath = os.path.join("..",os.path.join('face_detector', "deploy.prototxt"))
 weightsPath = os.path.join("..",os.path.join('face_detector',"res10_300x300_ssd_iter_140000.caffemodel"))
@@ -46,11 +47,14 @@ faceNet = cv2.dnn.readNet(prototxtPath,weightsPath)
 
 embeddings = []
 labels = []
+super_total = 0
 for i,imagepath in enumerate(imagepaths):
     image = cv2.imread(imagepath)
     #rgb_image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
     label = imagepath.split(os.path.sep)[-2]
-    print('Processed {} image'.format(i))
+    super_total +=1
+    if super_total % 100 == 0:
+       print('Processed {} images'.format(super_total)) 
     resized_frame = resize(image,width = 750)
 
 
@@ -78,7 +82,9 @@ for i,imagepath in enumerate(imagepaths_aug):
     image = cv2.imread(imagepath)
     #rgb_image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
     label = imagepath.split(os.path.sep)[-2]
-    print('Processed {} image'.format(i))
+    super_total +=1
+    if super_total % 100 == 0:
+       print('Processed {} images'.format(super_total)) 
     resized_frame = resize(image,width = 750)
 
 
@@ -102,6 +108,35 @@ for i,imagepath in enumerate(imagepaths_aug):
             embeddings.append(encoding)
             labels.append(label)
 
+for i,imagepath in enumerate(imagepaths_aug_advanced):
+    image = cv2.imread(imagepath)
+    #rgb_image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+    label = imagepath.split(os.path.sep)[-2]
+    super_total +=1
+    if super_total % 100 == 0:
+       print('Processed {} images'.format(super_total)) 
+    resized_frame = resize(image,width = 750)
+
+
+    #boxes = face_recognition.face_locations(rgb_image,model = 'cnn')
+    boxes =  predict_boxes(resized_frame,faceNet)
+    gray = cv2.cvtColor(resized_frame, cv2.COLOR_BGR2GRAY)
+
+    for box in boxes:
+    # extract the ROI of the *original* face, then align the face
+    # using facial landmarks
+        (x, y, w, h) = (box[-1],box[0],box[1] - box[-1],box[2] - box[0])
+        #rect = Rect(x,y,w,h)
+        rect = dlib.rectangle(left=box[3], top=box[0], right=box[1], bottom=box[2])
+        faceAligned = fa.align(resized_frame, gray, (rect))
+
+        rgb_frame = cv2.cvtColor(faceAligned,cv2.COLOR_BGR2RGB)
+
+        encodings = face_recognition.face_encodings(rgb_frame,[(0,rgb_frame.shape[0],rgb_frame.shape[1],0)])
+
+        for encoding in encodings:
+            embeddings.append(encoding)
+            labels.append(label)
 
 data = {'embeddings': embeddings,'labels':labels}
 

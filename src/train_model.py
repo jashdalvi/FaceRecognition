@@ -7,7 +7,7 @@ from sklearn.metrics import classification_report
 import numpy as np
 import os
 
-emb_path = os.path.join("..",'data.pickle')
+emb_path = os.path.join(os.path.join("..",'data'),"data.pickle")
 with open(emb_path,'rb') as f:
     data = pickle.load(f)
 

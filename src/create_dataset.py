@@ -47,9 +47,6 @@ while True:
         break
 
     ending_time = time.time()
-    if (ending_time - starting_time) > 10:
-        break
-
 cap.release()
 cv2.destroyAllWindows()
 

@@ -132,15 +132,10 @@ dmypy.json
 # input data and models
 input/
 models/
-data/
-Dataset/
-Dataset_aug/
 
 
 # data files
 *.csv
 *.h5
-*.pkl
 *.pth
 *.bin
-*.pickle
