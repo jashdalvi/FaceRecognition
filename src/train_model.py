@@ -7,6 +7,8 @@ from sklearn.metrics import classification_report
 import numpy as np
 import os
 
+
+
 emb_path = os.path.join(os.path.join("..",'data'),"data.pickle")
 with open(emb_path,'rb') as f:
     data = pickle.load(f)
@@ -29,7 +31,7 @@ model = LinearSVC()
 pipeline = Pipeline([('transformer', scalar), ('estimator',model)])
 #pipeline = Pipeline([('estimator',model)])
 cv = StratifiedKFold(n_splits=5)
-grid_svc = GridSearchCV(pipeline,param_grid = {'estimator__C':[0.0001,0.001,0.01,0.1,1,10]},scoring = 'accuracy',verbose = True,cv = cv)
+grid_svc = GridSearchCV(pipeline,param_grid = {'estimator__C':[0.0001,0.001,0.01,0.1,1,10]},scoring = 'accuracy',verbose = True,cv = cv,n_jobs = -1)
 grid_svc.fit(X,y)
 print("The Best score for svc model is {} with params {}".format(grid_svc.best_score_,grid_svc.best_params_))
 cross_val_scores = cross_val_score(grid_svc,X,y,cv = cv)
