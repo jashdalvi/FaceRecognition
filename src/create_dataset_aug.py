@@ -35,10 +35,10 @@ for i,imagep in enumerate(imagepaths):
     for imageg in imageGen:
         super_total += 1
         total += 1
-        if total == 50:
+        if super_total % 100 == 0 :
+            print('Processed {} images'.format(super_total))
+        if total % 50 == 0:
             break
-    if super_total % 100 == 0 :
-        print('Processed {} images'.format(super_total))
 
 for i,imagep in enumerate(imagepaths_aug_advanced):
     label = imagep.split(os.path.sep)[-2]
@@ -53,10 +53,10 @@ for i,imagep in enumerate(imagepaths_aug_advanced):
     for imageg in imageGen:
         super_total += 1
         total += 1
+        if super_total % 100 == 0 :
+            print('Processed {} images'.format(super_total))
         if total % 100 == 0:
             break
-    if super_total % 100 == 0 :
-        print('Processed {} images'.format(super_total))
 
 
 
