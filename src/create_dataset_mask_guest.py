@@ -171,5 +171,5 @@ if __name__ == '__main__':
     imagepaths = paths.list_images("../Dataset_aug/Guest")
     for i,imagepath in enumerate(imagepaths):
         create_mask(imagepath)
-        if (i+ 1) % 1000 == 0 :
+        if (i+ 1) % 2000 == 0 :
             break

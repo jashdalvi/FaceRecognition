@@ -15,7 +15,11 @@ if not os.path.exists(dataset_aug_path):
 else:
     imagepaths_aug = paths.list_images(dataset_aug_path)
     for imagepath in imagepaths_aug:
-        os.remove(imagepath)
+        label = imagepath.split(os.path.sep)[-2]
+        if label == "Guest":
+            continue
+        else:
+            os.remove(imagepath)
 
 
 
@@ -24,6 +28,8 @@ imagepaths_aug_advanced = paths.list_images(dataset_aug_advanced_path)
 super_total = 0
 for i,imagep in enumerate(imagepaths):
     label = imagep.split(os.path.sep)[-2]
+    if label == 'Guest':
+        continue
     image = load_img(imagep)
     image = img_to_array(image)
     image = np.expand_dims(image,axis = 0)
@@ -37,11 +43,13 @@ for i,imagep in enumerate(imagepaths):
         total += 1
         if super_total % 100 == 0 :
             print('Processed {} images'.format(super_total))
-        if total % 50 == 0:
+        if total % 300 == 0:
             break
 
 for i,imagep in enumerate(imagepaths_aug_advanced):
     label = imagep.split(os.path.sep)[-2]
+    if label == 'Guest':
+        continue
     image = load_img(imagep)
     image = img_to_array(image)
     image = np.expand_dims(image,axis = 0)
@@ -55,7 +63,7 @@ for i,imagep in enumerate(imagepaths_aug_advanced):
         total += 1
         if super_total % 100 == 0 :
             print('Processed {} images'.format(super_total))
-        if total % 100 == 0:
+        if total % 500 == 0:
             break
 
 

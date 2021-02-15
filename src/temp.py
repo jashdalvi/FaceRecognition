@@ -1,17 +1,23 @@
 import cv2
 import os
 import imutils
+from tensorflow.keras.preprocessing.image import img_to_array,load_img,ImageDataGenerator
+import numpy as np
 
 beard_path = os.path.join(os.path.join("..",'data_aug'),'beard1.png')
 
-image = cv2.imread(beard_path,cv2.IMREAD_UNCHANGED)
+aug = ImageDataGenerator(rotation_range=30, width_shift_range=0.1,
+                        height_shift_range=0.1, shear_range=0.2, zoom_range=0.2,
+                        horizontal_flip=True, fill_mode="nearest")
 
-imagebgr = image[:,:,-1]
-print(imagebgr.shape)
-imagebgr = imagebgr[11:331,39:440]
-#imagebgr = imutils.rotate_bound(imagebgr,30)
-imagebgr = cv2.resize(imagebgr,(224,224))
-imagebgr = imutils.rotate_bound(imagebgr,30)
-cv2.imshow("Beard",(cv2.bitwise_not(imagebgr)))
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+image = load_img(beard_path)
+image = img_to_array(image)
+image = np.expand_dims(image,axis = 0)
+label = "beard"
+save_to_dir = "temp"
+imageGen = aug.flow(image, batch_size=1, save_to_dir=save_to_dir,save_prefix=label, save_format="jpg")
+total = 0 
+for image in imageGen:
+    total +=1
+
+print("Produced {} images in total".format(str(total)))
